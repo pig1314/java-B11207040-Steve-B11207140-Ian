@@ -221,7 +221,7 @@ public class Tetris extends JFrame {
 
         //gameover note
         if (isGameOver) {
-            g2d.setColor(Color.RED);
+            g2d.setColor(Color.WHITE);
             g2d.setFont(new Font("Arial", Font.BOLD, 30));
             g2d.drawString("Game Over", WIDTH * BLOCK_SIZE / 4, HEIGHT * BLOCK_SIZE / 2);
         }
