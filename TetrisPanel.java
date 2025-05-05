@@ -15,8 +15,8 @@ public class TetrisPanel extends JPanel {
     private int[][] board = new int[HEIGHT][WIDTH];
     private Tetromino currentPiece;
     private Timer timer;
-    //private Timer timer2;
     private boolean isGameOver = false;
+    private boolean isPaused = false;
     private int level = 1; // 初始等級
     private int linesCleared = 0; // 總清除行數
     private static final int LINES_PER_LEVEL = 10; // 每10行升一級
@@ -53,7 +53,10 @@ public class TetrisPanel extends JPanel {
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                if (!isGameOver) {
+                if (e.getKeyCode() == KeyEvent.VK_P) {
+                    togglePause();
+                }
+                if (!isGameOver && !isPaused) {
                     switch (e.getKeyCode()) {
                         case KeyEvent.VK_LEFT:
                             currentPiece.move(-1, 0);
@@ -99,6 +102,19 @@ public class TetrisPanel extends JPanel {
         //timer = new Timer(SPEED_TABLE[0], e -> moveDown());
         //timer.start();
     }
+
+    private void togglePause() {
+        if (!isGameOver) {
+            isPaused = !isPaused;
+            if (isPaused) {
+                timer.stop();
+            } else {
+                timer.start();
+            }
+            repaint();
+        }
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -127,6 +143,11 @@ public class TetrisPanel extends JPanel {
         g.setFont(new Font("Arial", Font.BOLD, 20));
         g.drawString("Score: " + score, 10, 20);
         g.drawString("Level: " + level, 10, 50);
+        if (isPaused) {
+            g.setColor(Color.YELLOW);
+            g.setFont(new Font("Arial", Font.BOLD, 40));
+            g.drawString("Paused", WIDTH * BLOCK_SIZE / 4, HEIGHT * BLOCK_SIZE / 2);
+        }
         if (isGameOver) {
             g.setColor(Color.RED);
             g.setFont(new Font("Arial", Font.BOLD, 40));
@@ -154,6 +175,9 @@ public class TetrisPanel extends JPanel {
 
 
     private boolean moveDown() {
+        if (isPaused) {
+            return false;
+        }
         if (currentPiece != null && currentPiece.moveDown()) {
             return true;
         } else {

@@ -4,30 +4,28 @@ import java.awt.Point;
 public class TetrominoS extends Tetromino {
     public TetrominoS(int[][] board) {
         super(board);
-        shape = new Point[]{new Point(0, 0), new Point(1, 0), new Point(1, 1), new Point(2, 1)};
+        shape = new Point[]{new Point(-1, 0), new Point(0, 0), new Point(0, 1), new Point(1, 1)};
         color = Color.green;
-        position.x -= 2; // 調整初始位置以居中
+        position.x -= 1; // 調整初始位置以居中
     }
 
     @Override
     public void rotateCW() {
-        Point[] rotated = new Point[shape.length];
+        Point[] newShape = new Point[shape.length];
         for (int i = 0; i < shape.length; i++) {
-            rotated[i] = new Point(-shape[i].y, shape[i].x); // 順時針旋轉 90 度
+            newShape[i] = new Point(-shape[i].y, shape[i].x);
         }
-        if (canMove(0, 0, rotated)) {
-            shape = rotated;
-        }
+        int newState = (rotationState + 1) % 4;
+        tryRotate(newShape, newState, STANDARD_OFFSETS[rotationState]);
     }
 
     @Override
     public void rotateCCW() {
-        Point[] rotated = new Point[shape.length];
+        Point[] newShape = new Point[shape.length];
         for (int i = 0; i < shape.length; i++) {
-            rotated[i] = new Point(shape[i].y, -shape[i].x); // 逆時針旋轉 -90 度
+            newShape[i] = new Point(shape[i].y, -shape[i].x);
         }
-        if (canMove(0, 0, rotated)) {
-            shape = rotated;
-        }
+        int newState = (rotationState - 1 + 4) % 4;
+        tryRotate(newShape, newState, STANDARD_OFFSETS[(newState + 3) % 4]);
     }
 }

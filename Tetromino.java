@@ -6,12 +6,30 @@ public abstract class Tetromino {
     protected Color color;
     protected Point position;
     protected int[][] board;
+    protected int rotationState; // 0, 1 (R), 2, 3 (L)
     protected static final int WIDTH = 10;
     protected static final int HEIGHT = 20;
+
+    // SRS 偏移表（非 I 方塊）
+    protected static final Point[][] STANDARD_OFFSETS = {
+        {new Point(0, 0), new Point(-1, 0), new Point(-1, 1), new Point(0, -2), new Point(-1, -2)}, // 0->R
+        {new Point(0, 0), new Point(1, 0), new Point(1, -1), new Point(0, 2), new Point(1, 2)},   // R->2
+        {new Point(0, 0), new Point(1, 0), new Point(1, 1), new Point(0, -2), new Point(1, -2)},  // 2->L
+        {new Point(0, 0), new Point(-1, 0), new Point(-1, -1), new Point(0, 2), new Point(-1, 2)} // L->0
+    };
+
+    // SRS 偏移表（I 方塊）
+    protected static final Point[][] I_OFFSETS = {
+        {new Point(0, 0), new Point(-1, 0), new Point(2, 0), new Point(-1, 2), new Point(2, -1)}, // 0->R
+        {new Point(0, 0), new Point(-2, 0), new Point(1, 0), new Point(-2, -1), new Point(1, 2)}, // R->2
+        {new Point(0, 0), new Point(2, 0), new Point(-1, 0), new Point(2, 1), new Point(-1, -2)}, // 2->L
+        {new Point(0, 0), new Point(1, 0), new Point(-2, 0), new Point(1, -2), new Point(-2, 1)}  // L->0
+    };
 
     public Tetromino(int[][] board) {
         this.board = board;
         this.position = new Point(WIDTH / 2, 0);
+        this.rotationState = 0;
     }
 
     public Point[] getShape() {
@@ -24,6 +42,9 @@ public abstract class Tetromino {
 
     public Point getPosition() {
         return position;
+    }
+    public int getRotationState() {
+        return rotationState;
     }
 
     public Point[] getAbsolutePoints() {
@@ -61,4 +82,16 @@ public abstract class Tetromino {
 
     public abstract void rotateCW();
     public abstract void rotateCCW();
+    
+    protected boolean tryRotate(Point[] newShape, int newState, Point[] offsets) {
+        for (Point offset : offsets) {
+            if (canMove(offset.x, offset.y, newShape)) {
+                position.translate(offset.x, offset.y);
+                shape = newShape;
+                rotationState = newState;
+                return true;
+            }
+        }
+        return false;
+    }
 }
