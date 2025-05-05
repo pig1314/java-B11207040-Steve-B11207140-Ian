@@ -1,8 +1,13 @@
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+
 import javax.swing.*;
 
 import TetrisPanel;
+import javazoom.jl.player.Player;
 
 public class Tetris extends JFrame {
+    
     public Tetris() {
         setTitle("Tetris");
         setSize(10 * 30 + 16, 20 * 30 + 39);
