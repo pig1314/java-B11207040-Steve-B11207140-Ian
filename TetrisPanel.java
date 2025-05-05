@@ -237,7 +237,7 @@ public class TetrisPanel extends JPanel {
         }
         // 繪製分數框
         g.setColor(Color.LIGHT_GRAY);
-        g.fillRect(50, 20, 120, 50);
+        g.fillRect(50, 20, 150, 50);
         g.setColor(Color.BLACK);
         g.setFont(new Font("Arial", Font.BOLD, 20));
         g.drawString("Score: " + score, 60, 50);
@@ -298,7 +298,7 @@ public class TetrisPanel extends JPanel {
         if (isGameOver) {
             g.setColor(Color.RED);
             g.setFont(new Font("Arial", Font.BOLD, 40));
-            g.drawString("Game Over", BOARD_X + WIDTH * BLOCK_SIZE / 4, BOARD_Y + HEIGHT * BLOCK_SIZE / 2);
+            g.drawString("Game Over", BOARD_X + WIDTH * BLOCK_SIZE / 6, BOARD_Y + HEIGHT * BLOCK_SIZE / 2);
         }
     }
     
