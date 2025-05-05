@@ -98,6 +98,10 @@ public class TetrisPanel extends JPanel {
                             hold();
                             lastAction = "hold";
                             break;
+                        case KeyEvent.VK_SPACE:
+                            hardDrop();
+                            lastAction = "hardDrop";
+                            break;
                     }
                     repaint();
                 }
@@ -293,6 +297,21 @@ public class TetrisPanel extends JPanel {
             repaint();
             return false;
         }
+    }
+    private void hardDrop() {
+        while (currentPiece.moveDown()) {
+            // 持續下移直到無法移動
+        }
+        placePiece();
+        clearLines();
+        currentPiece = nextPiece;
+        nextPiece = createNewPiece();
+        if (!canMove(currentPiece)) {
+            isGameOver = true;
+            timer.stop();
+        }
+        hasHeld = false; // 新回合重置 Hold 旗標
+        repaint();
     }
 
     private boolean canMove(Tetromino piece) {
