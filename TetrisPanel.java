@@ -16,8 +16,15 @@ public class TetrisPanel extends JPanel {
     private static final int PANEL_HEIGHT = 710;
     private static final int BOARD_X = 150;
     private static final int BOARD_Y = 100;
+    private static final int HOLD_X = 20;
+    private static final int HOLD_Y = 150;
+    private static final int NEXT_X = 460;
+    private static final int NEXT_Y = 150;
     private int[][] board = new int[HEIGHT][WIDTH];
     private Tetromino currentPiece;
+    private Tetromino nextPiece;
+    private Tetromino holdPiece;
+    private boolean hasHeld = false;
     private Timer timer;
     private boolean isGameOver = false;
     private boolean isPaused = false;
@@ -56,6 +63,9 @@ public class TetrisPanel extends JPanel {
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         setBackground(Color.BLACK);
         setFocusable(true);
+        currentPiece = createNewPiece();
+        nextPiece = createNewPiece();
+        holdPiece = null;
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -78,20 +88,21 @@ public class TetrisPanel extends JPanel {
                             break;
                         case KeyEvent.VK_UP:
                             currentPiece.rotateCW();
-                            
                             lastAction = "rotate";
                             break;
                         case KeyEvent.VK_Z:
                             currentPiece.rotateCCW();
-                            
                             lastAction = "rotate";
+                            break;
+                        case KeyEvent.VK_C:
+                            hold();
+                            lastAction = "hold";
                             break;
                     }
                     repaint();
                 }
             }
         });
-        currentPiece = createNewPiece();
         timer = new Timer(800, e -> {
             if (!isGameOver) {
                 moveDown();
@@ -170,16 +181,44 @@ public class TetrisPanel extends JPanel {
         g.drawString("Level: " + level, 440, 50);
 
         // 繪製 Hold 區域
+        g.setColor(Color.DARK_GRAY);
+        g.fillRect(HOLD_X, HOLD_Y, 120, 120);
         g.setColor(Color.WHITE);
-        g.drawRect(20, 150, 120, 120);
+        g.drawRect(HOLD_X, HOLD_Y, 120, 120);
+        for (int i = 0; i <= 4; i++) {
+            g.drawLine(HOLD_X + i * BLOCK_SIZE, HOLD_Y, HOLD_X + i * BLOCK_SIZE, HOLD_Y + 120);
+            g.drawLine(HOLD_X, HOLD_Y + i * BLOCK_SIZE, HOLD_X + 120, HOLD_Y + i * BLOCK_SIZE);
+        }
         g.setFont(new Font("Arial", Font.BOLD, 20));
         g.drawString("Hold", 60, 140);
+        if (holdPiece != null) {
+            g.setColor(holdPiece.getColor());
+            for (Point p : holdPiece.getShape()) {
+                int drawX = HOLD_X + 30 + p.x * BLOCK_SIZE;
+                int drawY = HOLD_Y + 60 + p.y * BLOCK_SIZE;
+                g.fillRect(drawX, drawY, BLOCK_SIZE - 1, BLOCK_SIZE - 1);
+            }
+        }
 
         // 繪製 Next 區域
+        g.setColor(Color.DARK_GRAY);
+        g.fillRect(NEXT_X, NEXT_Y, 120, 120);
         g.setColor(Color.WHITE);
-        g.drawRect(460, 150, 120, 120);
+        g.drawRect(NEXT_X, NEXT_Y, 120, 120);
+        for (int i = 0; i <= 4; i++) {
+            g.drawLine(NEXT_X + i * BLOCK_SIZE, NEXT_Y, NEXT_X + i * BLOCK_SIZE, NEXT_Y + 120);
+            g.drawLine(NEXT_X, NEXT_Y + i * BLOCK_SIZE, NEXT_X + 120, NEXT_Y + i * BLOCK_SIZE);
+        }
         g.setFont(new Font("Arial", Font.BOLD, 20));
-        g.drawString("Next", 500, 140);
+        g.drawString("Next", 480, 140);
+        if (nextPiece != null) {
+            g.setColor(nextPiece.getColor());
+            for (Point p : nextPiece.getShape()) {
+                int drawX = NEXT_X + 30 + p.x * BLOCK_SIZE;
+                int drawY = NEXT_Y + 60 + p.y * BLOCK_SIZE;
+                g.fillRect(drawX, drawY, BLOCK_SIZE - 1, BLOCK_SIZE - 1);
+            }
+        }
 
 
         // 繪製暫停或遊戲結束提示
@@ -212,7 +251,28 @@ public class TetrisPanel extends JPanel {
         }
     }
 
-
+    private void hold() {
+        if (hasHeld) {
+            return; // 每回合限 Hold 一次
+        }
+        if (holdPiece == null) {
+            holdPiece = currentPiece;
+            currentPiece = nextPiece;
+            nextPiece = createNewPiece();
+        } else {
+            Tetromino temp = currentPiece;
+            currentPiece = holdPiece;
+            holdPiece = temp;
+        }
+        // 重置新方塊位置和旋轉狀態
+        currentPiece.position.setLocation(WIDTH / 2, 0);
+        if (!(currentPiece instanceof TetrominoO)) {
+            currentPiece.position.x -= 1;
+        }
+        currentPiece.rotationState = 0;
+        hasHeld = true;
+        repaint();
+    }
 
     private boolean moveDown() {
         if (isPaused) {
@@ -223,15 +283,18 @@ public class TetrisPanel extends JPanel {
         } else {
             placePiece();
             clearLines();
-            currentPiece = createNewPiece();
+            currentPiece = nextPiece;
+            nextPiece = createNewPiece();
             if (!canMove(currentPiece)) {
                 isGameOver = true;
                 timer.stop();
             }
+            hasHeld = false; // 新回合重置 Hold 旗標
             repaint();
             return false;
         }
     }
+
     private boolean canMove(Tetromino piece) {
         return piece.canMove(0, 0, piece.getShape());
     }
@@ -259,7 +322,7 @@ public class TetrisPanel extends JPanel {
             }
         }
         // T-spin 檢測（針對 T 方塊）
-        if (currentPiece instanceof TetrominoT && (lastAction.equals("rotate") || lastAction.equals("rotateBack"))) {
+        if (currentPiece instanceof TetrominoT && lastAction.equals("rotate")) {
             Point center = new Point(currentPiece.getPosition().x + 1, currentPiece.getPosition().y + 1);
             int occupiedCount = 0;
             int[] dx = {-1, 1, -1, 1};
