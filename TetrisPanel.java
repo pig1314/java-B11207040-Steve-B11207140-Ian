@@ -35,7 +35,8 @@ public class TetrisPanel extends JPanel {
     private String lastAction = "";
     private boolean isPlayingMusic = true;
     private Thread musicThread;
-
+    private JButton restartButton;
+    private JButton quitButton;
     
     private static final int[] SPEED_TABLE = {
         800,  // 等級 1: ~53幀 (800ms)
@@ -63,9 +64,12 @@ public class TetrisPanel extends JPanel {
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         setBackground(Color.BLACK);
         setFocusable(true);
+        setLayout(null); // 使用絕對佈局以定位按鈕
+
         currentPiece = createNewPiece();
         nextPiece = createNewPiece();
         holdPiece = null;
+
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -129,11 +133,71 @@ public class TetrisPanel extends JPanel {
             isPaused = !isPaused;
             if (isPaused) {
                 timer.stop();
+                // 添加 Restart 和 Quit 按鈕
+                restartButton = new JButton("Restart");
+                restartButton.setForeground(Color.WHITE);
+                restartButton.setBackground(Color.LIGHT_GRAY);
+                restartButton.setFont(new Font("Arial", Font.BOLD, 20));
+                restartButton.setBounds(BOARD_X + 90, BOARD_Y + 250, 120, 50);
+                restartButton.setFocusPainted(false);
+                restartButton.addActionListener(e -> restartGame());
+                add(restartButton);
+
+                quitButton = new JButton("Quit");
+                quitButton.setForeground(Color.WHITE);
+                quitButton.setBackground(Color.LIGHT_GRAY);
+                quitButton.setFont(new Font("Arial", Font.BOLD, 20));
+                quitButton.setBounds(BOARD_X + 90, BOARD_Y + 350, 120, 50);
+                quitButton.setFocusPainted(false);
+                quitButton.addActionListener(e -> System.exit(0));
+                add(quitButton);
             } else {
                 timer.start();
+                // 移除按鈕
+                if (restartButton != null) {
+                    remove(restartButton);
+                    restartButton = null;
+                }
+                if (quitButton != null) {
+                    remove(quitButton);
+                    quitButton = null;
+                }
+                requestFocusInWindow(); // 確保鍵盤焦點
+
             }
+            revalidate();
             repaint();
         }
+    }
+
+    private void restartGame() {
+        // 重置遊戲狀態
+        board = new int[HEIGHT][WIDTH];
+        score = 0;
+        level = 1;
+        linesCleared = 0;
+        hasHeld = false;
+        lastAction = "";
+        isGameOver = false;
+        isPaused = false;
+        currentPiece = createNewPiece();
+        nextPiece = createNewPiece();
+        holdPiece = null;
+        timer.setDelay(SPEED_TABLE[0]);
+        timer.start();
+        // 移除按鈕
+        if (restartButton != null) {
+            remove(restartButton);
+            restartButton = null;
+        }
+        if (quitButton != null) {
+            remove(quitButton);
+            quitButton = null;
+        }
+        revalidate();
+        repaint();
+        requestFocusInWindow(); // 恢復鍵盤焦點
+
     }
 
     @Override
@@ -229,7 +293,7 @@ public class TetrisPanel extends JPanel {
         if (isPaused) {
             g.setColor(Color.YELLOW);
             g.setFont(new Font("Arial", Font.BOLD, 40));
-            g.drawString("Paused", BOARD_X + WIDTH * BLOCK_SIZE / 4, BOARD_Y + HEIGHT * BLOCK_SIZE / 2);
+            g.drawString("Paused", BOARD_X + WIDTH * BLOCK_SIZE / 4, BOARD_Y + 150);
         }
         if (isGameOver) {
             g.setColor(Color.RED);
