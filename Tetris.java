@@ -1,10 +1,5 @@
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
 
 import javax.swing.*;
-
-import TetrisPanel;
-import javazoom.jl.player.Player;
 
 public class Tetris extends JFrame {
     
