@@ -13,4 +13,13 @@
 
 ## 參考資料
 •
-
+## To be implement
+clear line effect
+    flashing
+    popup word 
+sound effect
+SRS exploit fix
+game over menu
+bug fix
+    hold I block visual bug
+    score went over space
