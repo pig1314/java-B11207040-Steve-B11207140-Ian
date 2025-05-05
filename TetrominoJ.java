@@ -4,7 +4,7 @@ import java.awt.Point;
 public class TetrominoJ extends Tetromino {
     public TetrominoJ(int[][] board) {
         super(board);
-        shape = new Point[]{new Point(-1, 1), new Point(-1, 0), new Point(0, 0), new Point(1, 0)};
+        shape = new Point[]{new Point(-1, -1), new Point(-1, 0), new Point(0, 0), new Point(1, 0)};
         color = Color.BLUE;
         position.x -= 1; // 調整初始位置以居中
     }

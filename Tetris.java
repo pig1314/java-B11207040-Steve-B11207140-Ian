@@ -1,24 +1,14 @@
-
 import javax.swing.*;
 
-public class Tetris extends JFrame {
-    
-    public Tetris() {
-        setTitle("Tetris");
-        setSize(10 * 30 + 16, 20 * 30 + 39);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
-
-        TetrisPanel tetrisPanel = new TetrisPanel();
-        add(tetrisPanel);
-        tetrisPanel.requestFocusInWindow();
-
-        setVisible(true);
-    }
-
+public class Tetris {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            new Tetris();
+            JFrame frame = new JFrame("Tetris");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.add(new TetrisPanel());
+            frame.pack(); // 自動調整 JFrame 大小以適應 TetrisPanel
+            frame.setLocationRelativeTo(null); // 視窗居中
+            frame.setVisible(true);
         });
     }
 }

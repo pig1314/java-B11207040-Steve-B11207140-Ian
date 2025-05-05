@@ -12,6 +12,10 @@ public class TetrisPanel extends JPanel {
     private static final int WIDTH = 10;
     private static final int HEIGHT = 20;
     private static final int BLOCK_SIZE = 30;
+    private static final int PANEL_WIDTH = 600;
+    private static final int PANEL_HEIGHT = 710;
+    private static final int BOARD_X = 150;
+    private static final int BOARD_Y = 100;
     private int[][] board = new int[HEIGHT][WIDTH];
     private Tetromino currentPiece;
     private Timer timer;
@@ -49,6 +53,8 @@ public class TetrisPanel extends JPanel {
     
 
     public TetrisPanel() {
+        setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
+        setBackground(Color.BLACK);
         setFocusable(true);
         addKeyListener(new KeyAdapter() {
             @Override
@@ -75,7 +81,7 @@ public class TetrisPanel extends JPanel {
                             
                             lastAction = "rotate";
                             break;
-                        case KeyEvent.VK_NUMPAD1:
+                        case KeyEvent.VK_Z:
                             currentPiece.rotateCCW();
                             
                             lastAction = "rotate";
@@ -118,13 +124,16 @@ public class TetrisPanel extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        // 繪製遊戲板
+        g.setColor(Color.DARK_GRAY);
+        g.fillRect(BOARD_X, BOARD_Y, WIDTH * BLOCK_SIZE, HEIGHT * BLOCK_SIZE);
         for (int i = 0; i < HEIGHT; i++) {
             for (int j = 0; j < WIDTH; j++) {
                 if (board[i][j] != 0) {
                     g.setColor(new Color(board[i][j]));
-                    g.fillRect(j * BLOCK_SIZE, i * BLOCK_SIZE, BLOCK_SIZE , BLOCK_SIZE );
+                    g.fillRect(BOARD_X + j * BLOCK_SIZE, BOARD_Y + i * BLOCK_SIZE, BLOCK_SIZE , BLOCK_SIZE );
                     g.setColor(Color.GRAY);
-                    g.drawRect(j * BLOCK_SIZE, i * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+                    g.drawRect(BOARD_X + j * BLOCK_SIZE, BOARD_Y + i * BLOCK_SIZE, BLOCK_SIZE , BLOCK_SIZE );
                 }
             }
         }
@@ -132,26 +141,57 @@ public class TetrisPanel extends JPanel {
             g.setColor(currentPiece.getColor());
             for (Point p : currentPiece.getAbsolutePoints()) {
                 if (p.y >= 0) {
-                    g.fillRect(p.x * BLOCK_SIZE, p.y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+                    g.fillRect(BOARD_X + p.x * BLOCK_SIZE, BOARD_Y + p.y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
                     g.setColor(Color.GRAY);
-                    g.drawRect(p.x * BLOCK_SIZE, p.y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+                    g.drawRect(BOARD_X + p.x * BLOCK_SIZE, BOARD_Y + p.y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
                     g.setColor(currentPiece.getColor());
                 }
             }
         }
+        // 繪製遊戲板格子線
+        g.setColor(Color.LIGHT_GRAY);
+        for (int i = 0; i <= WIDTH; i++) {
+            g.drawLine(BOARD_X + i * BLOCK_SIZE, BOARD_Y, BOARD_X + i * BLOCK_SIZE, BOARD_Y + HEIGHT * BLOCK_SIZE);
+        }
+        for (int i = 0; i <= HEIGHT; i++) {
+            g.drawLine(BOARD_X, BOARD_Y + i * BLOCK_SIZE, BOARD_X + WIDTH * BLOCK_SIZE, BOARD_Y + i * BLOCK_SIZE);
+        }
+        // 繪製分數框
+        g.setColor(Color.LIGHT_GRAY);
+        g.fillRect(50, 20, 120, 50);
         g.setColor(Color.BLACK);
         g.setFont(new Font("Arial", Font.BOLD, 20));
-        g.drawString("Score: " + score, 10, 20);
-        g.drawString("Level: " + level, 10, 50);
+        g.drawString("Score: " + score, 60, 50);
+        // 繪製等級框
+        g.setColor(Color.LIGHT_GRAY);
+        g.fillRect(430, 20, 120, 50);
+        g.setColor(Color.BLACK);
+        g.setFont(new Font("Arial", Font.BOLD, 20));
+        g.drawString("Level: " + level, 440, 50);
+
+        // 繪製 Hold 區域
+        g.setColor(Color.WHITE);
+        g.drawRect(20, 150, 120, 120);
+        g.setFont(new Font("Arial", Font.BOLD, 20));
+        g.drawString("Hold", 60, 140);
+
+        // 繪製 Next 區域
+        g.setColor(Color.WHITE);
+        g.drawRect(460, 150, 120, 120);
+        g.setFont(new Font("Arial", Font.BOLD, 20));
+        g.drawString("Next", 500, 140);
+
+
+        // 繪製暫停或遊戲結束提示
         if (isPaused) {
             g.setColor(Color.YELLOW);
             g.setFont(new Font("Arial", Font.BOLD, 40));
-            g.drawString("Paused", WIDTH * BLOCK_SIZE / 4, HEIGHT * BLOCK_SIZE / 2);
+            g.drawString("Paused", BOARD_X + WIDTH * BLOCK_SIZE / 4, BOARD_Y + HEIGHT * BLOCK_SIZE / 2);
         }
         if (isGameOver) {
             g.setColor(Color.RED);
             g.setFont(new Font("Arial", Font.BOLD, 40));
-            g.drawString("Game Over", WIDTH * BLOCK_SIZE / 4, HEIGHT * BLOCK_SIZE / 2);
+            g.drawString("Game Over", BOARD_X + WIDTH * BLOCK_SIZE / 4, BOARD_Y + HEIGHT * BLOCK_SIZE / 2);
         }
     }
     
