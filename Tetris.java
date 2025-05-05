@@ -5,9 +5,9 @@ public class Tetris {
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Tetris");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.add(new TetrisPanel());
-            frame.pack(); // 自動調整 JFrame 大小以適應 TetrisPanel
-            frame.setLocationRelativeTo(null); // 視窗居中
+            frame.add(new MainMenuPanel(frame));
+            frame.pack();
+            frame.setLocationRelativeTo(null);
             frame.setVisible(true);
         });
     }
