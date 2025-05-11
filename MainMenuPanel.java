@@ -19,7 +19,7 @@ public class MainMenuPanel extends JPanel {
         add(titleLabel);
 
         // Start 按鈕
-        JButton SingleplayerButton = new JButton("Single Player");
+        JButton SingleplayerButton = new JButton("Arcane");
         SingleplayerButton.setForeground(Color.WHITE);
         SingleplayerButton.setBackground(Color.LIGHT_GRAY);
         SingleplayerButton.setFont(new Font("Arial", Font.BOLD, 30));
@@ -27,20 +27,37 @@ public class MainMenuPanel extends JPanel {
         SingleplayerButton.setFocusPainted(false);
         SingleplayerButton.addActionListener(e -> {
             frame.getContentPane().removeAll();
-            TetrisPanel tetrisPanel = new TetrisPanel();
-            frame.add(tetrisPanel);
+            ArcadeTetrisPanel ArcadeTetrisPanel = new ArcadeTetrisPanel();
+            frame.add(ArcadeTetrisPanel);
             frame.pack();
-            tetrisPanel.requestFocusInWindow();
+            ArcadeTetrisPanel.requestFocusInWindow();
             frame.revalidate();
             frame.repaint();
         });
         add(SingleplayerButton);
         
-        JButton TwoplayerButton = new JButton("Two Players");
+        JButton ChallengeButton = new JButton("Challenge");
+        ChallengeButton.setForeground(Color.WHITE);
+        ChallengeButton.setBackground(Color.LIGHT_GRAY);
+        ChallengeButton.setFont(new Font("Arial", Font.BOLD, 30));
+        ChallengeButton.setBounds(150, 400, 300, 80);
+        ChallengeButton.setFocusPainted(false);
+        ChallengeButton.addActionListener(e -> {
+            frame.getContentPane().removeAll();
+            ChallengeTetrisPanel ChallengePanel = new ChallengeTetrisPanel();
+            frame.add(ChallengePanel);
+            frame.pack();
+            ChallengePanel.requestFocusInWindow();
+            frame.revalidate();
+            frame.repaint();
+        });
+        add(ChallengeButton);
+        
+        JButton TwoplayerButton = new JButton("Battle");
         TwoplayerButton.setForeground(Color.WHITE);
         TwoplayerButton.setBackground(Color.LIGHT_GRAY);
         TwoplayerButton.setFont(new Font("Arial", Font.BOLD, 30));
-        TwoplayerButton.setBounds(150, 400, 300, 80);
+        TwoplayerButton.setBounds(150, 550, 300, 80);
         TwoplayerButton.setFocusPainted(false);
         TwoplayerButton.addActionListener(e -> {
             frame.getContentPane().removeAll();

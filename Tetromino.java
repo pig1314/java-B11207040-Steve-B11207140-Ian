@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.awt.Point;
+import java.util.Arrays;
 
 public abstract class Tetromino {
     protected Point[] shape;
@@ -33,7 +34,18 @@ public abstract class Tetromino {
     }
 
     public Point[] getShape() {
+        if (shape == null || shape.length != 4 || containsNull(shape)) {
+            System.err.println("Invalid shape in " + this.getClass().getSimpleName() + ": " + Arrays.toString(shape) + ", returning default");
+            return new Point[]{new Point(0, 0), new Point(1, 0), new Point(0, 1), new Point(1, 1)};
+        }
         return shape;
+    }
+
+    private boolean containsNull(Point[] points) {
+        for (Point p : points) {
+            if (p == null) return true;
+        }
+        return false;
     }
 
     public Color getColor() {
@@ -43,11 +55,13 @@ public abstract class Tetromino {
     public Point getPosition() {
         return position;
     }
+
     public int getRotationState() {
         return rotationState;
     }
 
     public Point[] getAbsolutePoints() {
+        Point[] shape = getShape();
         Point[] result = new Point[shape.length];
         for (int i = 0; i < shape.length; i++) {
             result[i] = new Point(position.x + shape[i].x, position.y + shape[i].y);
@@ -56,6 +70,10 @@ public abstract class Tetromino {
     }
 
     protected boolean canMove(int dx, int dy, Point[] newShape) {
+        if (newShape == null || newShape.length != 4 || containsNull(newShape)) {
+            System.err.println("Invalid newShape in canMove for " + this.getClass().getSimpleName() + ": " + Arrays.toString(newShape));
+            return false;
+        }
         for (Point p : newShape) {
             int boardX = position.x + p.x + dx;
             int boardY = position.y + p.y + dy;
@@ -82,8 +100,12 @@ public abstract class Tetromino {
 
     public abstract void rotateCW();
     public abstract void rotateCCW();
-    
+
     protected boolean tryRotate(Point[] newShape, int newState, Point[] offsets) {
+        if (newShape == null || newShape.length != 4 || containsNull(newShape)) {
+            System.err.println("Invalid newShape in tryRotate for " + this.getClass().getSimpleName() + ": " + Arrays.toString(newShape));
+            return false;
+        }
         for (Point offset : offsets) {
             if (canMove(offset.x, offset.y, newShape)) {
                 position.translate(offset.x, offset.y);
