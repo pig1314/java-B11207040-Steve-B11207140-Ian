@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.awt.Point;
+import java.util.Arrays;
 
 public class TetrominoI extends Tetromino {
     public TetrominoI(int[][] board) {
@@ -16,7 +17,9 @@ public class TetrominoI extends Tetromino {
             newShape[i] = new Point(-shape[i].y, shape[i].x); // 順時針 90 度
         }
         int newState = (rotationState + 1) % 4;
-        tryRotate(newShape, newState, I_OFFSETS[rotationState]);
+        if (!tryRotate(newShape, newState, I_OFFSETS[rotationState])) {
+            System.err.println("Rotation CW failed for TetrominoI, shape: " + Arrays.toString(newShape));
+        }
     }
 
     @Override
@@ -26,6 +29,8 @@ public class TetrominoI extends Tetromino {
             newShape[i] = new Point(shape[i].y, -shape[i].x); // 逆時針 -90 度
         }
         int newState = (rotationState - 1 + 4) % 4;
-        tryRotate(newShape, newState, I_OFFSETS[(newState + 3) % 4]);
+        if (!tryRotate(newShape, newState, I_OFFSETS[(newState + 3) % 4])) {
+            System.err.println("Rotation CCW failed for TetrominoI, shape: " + Arrays.toString(newShape));
+        }
     }
 }
