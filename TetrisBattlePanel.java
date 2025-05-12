@@ -309,6 +309,7 @@ public class TetrisBattlePanel extends AbstractTetrisPanel {
 
         Random random = new Random();
         Color[] colors = {
+            Color.LIGHT_GRAY,
             new TetrominoI(opponent.board).getColor(),
             new TetrominoO(opponent.board).getColor(),
             new TetrominoT(opponent.board).getColor(),
