@@ -47,17 +47,11 @@ public class ChallengeTetrisPanel extends AbstractTetrisPanel {
         // 生成障礙行（底部，board[19]，9 個方塊，1 個隨機空格）
         int[] newLine = new int[WIDTH];
         Color[] colors = {
-            new TetrominoI(board).getColor(),
-            new TetrominoO(board).getColor(),
-            new TetrominoT(board).getColor(),
-            new TetrominoL(board).getColor(),
-            new TetrominoJ(board).getColor(),
-            new TetrominoS(board).getColor(),
-            new TetrominoZ(board).getColor()
+            Color.GRAY
         };
         // 先填充所有位置
         for (int j = 0; j < WIDTH; j++) {
-            newLine[j] = colors[random.nextInt(colors.length)].getRGB();
+            newLine[j] = colors[0].getRGB();
         }
         // 隨機選擇一個位置設為空格
         int emptyIndex = random.nextInt(WIDTH);

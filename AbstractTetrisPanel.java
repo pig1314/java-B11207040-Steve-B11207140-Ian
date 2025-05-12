@@ -1,6 +1,9 @@
 import javax.swing.*;
+import javazoom.jl.player.Player;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
 import java.util.Random;
 
 public abstract class AbstractTetrisPanel extends JPanel {
@@ -28,10 +31,12 @@ public abstract class AbstractTetrisPanel extends JPanel {
     protected Timer timer;
     protected boolean isGameOver = false;
     protected boolean isPaused = false;
+    protected boolean isPlayingMusic = true;
     protected int score = 0;
     protected int level = 1;
     protected int linesCleared = 0;
     protected String lastAction = "";
+    protected Thread musicThread;
     protected JButton restartButton;
     protected JButton quitButton;
 
@@ -52,6 +57,12 @@ public abstract class AbstractTetrisPanel extends JPanel {
                 moveDown();
                 repaint();
         });
+        musicThread = new Thread(new Runnable() {
+            public void run() {
+                playMusic();
+            }
+        });
+        musicThread.start();
         timer.start();
 
         // 設置按鍵監聽器
@@ -387,7 +398,7 @@ public abstract class AbstractTetrisPanel extends JPanel {
             g.setColor(holdPiece.getColor());
             for (Point p : holdPiece.getShape()) {
                 int drawX = HOLD_X + 30 + p.x * BLOCK_SIZE;
-                int drawY = HOLD_Y + 30 + p.y * BLOCK_SIZE;
+                int drawY = HOLD_Y + 60 + p.y * BLOCK_SIZE;
                 g.fillRect(drawX, drawY, BLOCK_SIZE - 1, BLOCK_SIZE - 1);
             }
         }
@@ -407,7 +418,7 @@ public abstract class AbstractTetrisPanel extends JPanel {
             g.setColor(nextPiece.getColor());
             for (Point p : nextPiece.getShape()) {
                 int drawX = NEXT_X + 30 + p.x * BLOCK_SIZE;
-                int drawY = NEXT_Y + 30 + p.y * BLOCK_SIZE;
+                int drawY = NEXT_Y + 60 + p.y * BLOCK_SIZE;
                 g.fillRect(drawX, drawY, BLOCK_SIZE - 1, BLOCK_SIZE - 1);
             }
         }
@@ -431,5 +442,18 @@ public abstract class AbstractTetrisPanel extends JPanel {
     // 鉤子方法，子類可覆寫以繪製模式特定 UI
     protected void paintModeSpecific(Graphics g) {
         // 默認無額外繪製
+    }
+    
+    private void playMusic() {
+        try {
+            while (isPlayingMusic) {
+                FileInputStream fis = new FileInputStream("tetris.mp3");
+                BufferedInputStream bis = new BufferedInputStream(fis);
+                Player player = new Player(bis);
+                player.play();
+            }
+        } catch (Exception e) {
+            System.out.println("Problem playing sound file: " + e.getMessage());
+        }
     }
 }
