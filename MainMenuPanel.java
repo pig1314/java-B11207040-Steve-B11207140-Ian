@@ -24,8 +24,6 @@ public class MainMenuPanel extends JPanel {
         add(titleLabel);
 
         // Start 按鈕
-<<<<<<< HEAD
-<<<<<<< HEAD
         startButton = new JButton("Start");
         startButton.setForeground(Color.WHITE);
         startButton.setBackground(Color.LIGHT_GRAY);
@@ -34,11 +32,8 @@ public class MainMenuPanel extends JPanel {
         startButton.setFocusPainted(false);
         startButton.addActionListener(e -> showGameModeButtons());
         add(startButton);
-=======
         JButton SingleplayerButton = new JButton("Single Player");
-=======
         JButton SingleplayerButton = new JButton("Arcane");
->>>>>>> ea615c69918570c7884593dfc9af406a3ac0cb07
         SingleplayerButton.setForeground(Color.WHITE);
         SingleplayerButton.setBackground(Color.LIGHT_GRAY);
         SingleplayerButton.setFont(new Font("Arial", Font.BOLD, 30));
