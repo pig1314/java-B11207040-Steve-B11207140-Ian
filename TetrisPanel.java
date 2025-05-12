@@ -1,7 +1,5 @@
 import javax.swing.*;
-
 import javazoom.jl.player.Player;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.io.BufferedInputStream;
@@ -37,6 +35,7 @@ public class TetrisPanel extends JPanel {
     private Thread musicThread;
     private JButton restartButton;
     private JButton quitButton;
+    private static final Color OBSTACLE_COLOR = Color.GRAY; // 障礙物顏色
     
     private static final int[] SPEED_TABLE = {
         800,  // 等級 1: ~53幀 (800ms)
@@ -55,10 +54,6 @@ public class TetrisPanel extends JPanel {
         66,   // 等級 14: ~7幀
         50    // 等級 15: ~6幀
     };
-    
-    
-    
-    
 
     public TetrisPanel() {
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
@@ -124,8 +119,6 @@ public class TetrisPanel extends JPanel {
             }
         });
         musicThread.start();
-        //timer = new Timer(SPEED_TABLE[0], e -> moveDown());
-        //timer.start();
     }
 
     private void togglePause() {
@@ -163,7 +156,6 @@ public class TetrisPanel extends JPanel {
                     quitButton = null;
                 }
                 requestFocusInWindow(); // 確保鍵盤焦點
-
             }
             revalidate();
             repaint();
@@ -197,7 +189,6 @@ public class TetrisPanel extends JPanel {
         revalidate();
         repaint();
         requestFocusInWindow(); // 恢復鍵盤焦點
-
     }
 
     @Override
@@ -210,9 +201,9 @@ public class TetrisPanel extends JPanel {
             for (int j = 0; j < WIDTH; j++) {
                 if (board[i][j] != 0) {
                     g.setColor(new Color(board[i][j]));
-                    g.fillRect(BOARD_X + j * BLOCK_SIZE, BOARD_Y + i * BLOCK_SIZE, BLOCK_SIZE , BLOCK_SIZE );
+                    g.fillRect(BOARD_X + j * BLOCK_SIZE, BOARD_Y + i * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
                     g.setColor(Color.GRAY);
-                    g.drawRect(BOARD_X + j * BLOCK_SIZE, BOARD_Y + i * BLOCK_SIZE, BLOCK_SIZE , BLOCK_SIZE );
+                    g.drawRect(BOARD_X + j * BLOCK_SIZE, BOARD_Y + i * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
                 }
             }
         }
@@ -288,7 +279,6 @@ public class TetrisPanel extends JPanel {
             }
         }
 
-
         // 繪製暫停或遊戲結束提示
         if (isPaused) {
             g.setColor(Color.YELLOW);
@@ -301,9 +291,7 @@ public class TetrisPanel extends JPanel {
             g.drawString("Game Over", BOARD_X + WIDTH * BLOCK_SIZE / 6, BOARD_Y + HEIGHT * BLOCK_SIZE / 2);
         }
     }
-    
 
-    
     private Tetromino createNewPiece() {
         Random random = new Random();
         int type = random.nextInt(7);
@@ -362,6 +350,7 @@ public class TetrisPanel extends JPanel {
             return false;
         }
     }
+
     private void hardDrop() {
         while (currentPiece.moveDown()) {
             // 持續下移直到無法移動
@@ -381,7 +370,7 @@ public class TetrisPanel extends JPanel {
     private boolean canMove(Tetromino piece) {
         return piece.canMove(0, 0, piece.getShape());
     }
-    
+
     private void playMusic() {
         try {
             while (isPlayingMusic) {
@@ -394,7 +383,6 @@ public class TetrisPanel extends JPanel {
             System.out.println("Problem playing sound file: " + e.getMessage());
         }
     }
-
 
     private void placePiece() {
         for (Point p : currentPiece.getAbsolutePoints()) {
@@ -457,13 +445,70 @@ public class TetrisPanel extends JPanel {
         int newLevel = linesCleared / LINES_PER_LEVEL + 1;
         if (newLevel > level) {
             level = newLevel;
-            adjustGameSpeed(); // 調整速度
+            adjustGameSpeed(); // 調整速度並添加障礙物
         }
     }
 
     private void adjustGameSpeed() {
         int delay = SPEED_TABLE[Math.min(level - 1, SPEED_TABLE.length - 1)];
         timer.setDelay(delay);
+        //addObstacleRow(); // 當等級提升時添加障礙物行
     }
 
+    private void addObstacleRow() {
+        // 儲存當前方塊位置
+        Point originalPosition = new Point(currentPiece.position);
+        System.out.println("Adding obstacle row. Original piece position: " + originalPosition);
+
+        // 將所有現有方塊上移一行
+        for (int i = 0; i < HEIGHT - 1; i++) {
+            System.arraycopy(board[i + 1], 0, board[i], 0, WIDTH);
+        }
+
+        // 在底部添加一排障礙物，隨機留一個空位
+        Random random = new Random();
+        int emptySlot = random.nextInt(WIDTH);
+        for (int j = 0; j < WIDTH; j++) {
+            if (j == emptySlot) {
+                board[HEIGHT - 1][j] = 0; // 空位
+            } else {
+                board[HEIGHT - 1][j] = OBSTACLE_COLOR.getRGB(); // 障礙物
+            }
+        }
+
+        // 重置當前方塊到初始位置（類似新方塊生成）
+        currentPiece.position.setLocation(WIDTH / 2, 0);
+        if (!(currentPiece instanceof TetrominoO)) {
+            currentPiece.position.x -= 1;
+        }
+        currentPiece.rotationState = 0;
+
+        // 檢查當前方塊是否合法
+        if (!canMove(currentPiece)) {
+            System.out.println("Piece at initial position is invalid. Attempting to adjust...");
+            // 嘗試向上移動到合法位置
+            boolean validPositionFound = false;
+            for (int y = 0; y < 4; y++) { // 嘗試最多4行
+                currentPiece.position.y = y;
+                for (int x = 0; x < WIDTH - 3; x++) { // 嘗試不同x位置
+                    currentPiece.position.x = x;
+                    if (canMove(currentPiece)) {
+                        validPositionFound = true;
+                        System.out.println("Valid position found at: x=" + x + ", y=" + y);
+                        break;
+                    }
+                }
+                if (validPositionFound) break;
+            }
+            if (!validPositionFound) {
+                System.out.println("No valid position found for piece. Game Over.");
+                isGameOver = true;
+                timer.stop();
+            }
+        } else {
+            System.out.println("Piece position is valid after reset: " + currentPiece.position);
+        }
+
+        repaint();
+    }
 }

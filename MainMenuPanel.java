@@ -20,10 +20,11 @@ public class MainMenuPanel extends JPanel {
         titleLabel = new JLabel("Tetris", SwingConstants.CENTER);
         titleLabel.setForeground(Color.WHITE);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 50));
-        titleLabel.setBounds(0, 200, PANEL_WIDTH, 60);
+        titleLabel.setBounds(0, 100, PANEL_WIDTH, 60);
         add(titleLabel);
 
         // Start 按鈕
+<<<<<<< HEAD
         startButton = new JButton("Start");
         startButton.setForeground(Color.WHITE);
         startButton.setBackground(Color.LIGHT_GRAY);
@@ -32,6 +33,41 @@ public class MainMenuPanel extends JPanel {
         startButton.setFocusPainted(false);
         startButton.addActionListener(e -> showGameModeButtons());
         add(startButton);
+=======
+        JButton SingleplayerButton = new JButton("Single Player");
+        SingleplayerButton.setForeground(Color.WHITE);
+        SingleplayerButton.setBackground(Color.LIGHT_GRAY);
+        SingleplayerButton.setFont(new Font("Arial", Font.BOLD, 30));
+        SingleplayerButton.setBounds(150, 250, 300, 80);
+        SingleplayerButton.setFocusPainted(false);
+        SingleplayerButton.addActionListener(e -> {
+            frame.getContentPane().removeAll();
+            TetrisPanel tetrisPanel = new TetrisPanel();
+            frame.add(tetrisPanel);
+            frame.pack();
+            tetrisPanel.requestFocusInWindow();
+            frame.revalidate();
+            frame.repaint();
+        });
+        add(SingleplayerButton);
+        
+        JButton TwoplayerButton = new JButton("Two Players");
+        TwoplayerButton.setForeground(Color.WHITE);
+        TwoplayerButton.setBackground(Color.LIGHT_GRAY);
+        TwoplayerButton.setFont(new Font("Arial", Font.BOLD, 30));
+        TwoplayerButton.setBounds(150, 400, 300, 80);
+        TwoplayerButton.setFocusPainted(false);
+        TwoplayerButton.addActionListener(e -> {
+            frame.getContentPane().removeAll();
+            TetrisBattlePanel tetrisPanel = new TetrisBattlePanel();
+            frame.add(tetrisPanel);
+            frame.pack();
+            tetrisPanel.requestFocusInWindow();
+            frame.revalidate();
+            frame.repaint();
+        });
+        add(TwoplayerButton);
+>>>>>>> a1e027c12f50807caa8170c678372561ac5b408d
     }
 
     private void showGameModeButtons() {
