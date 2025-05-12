@@ -11,7 +11,7 @@ public abstract class AbstractTetrisPanel extends JPanel {
     protected static final int HEIGHT = 20;
     protected static final int BLOCK_SIZE = 30;
     protected static final int PANEL_WIDTH = 600;
-    protected static final int PANEL_HEIGHT = 700;
+    protected static final int PANEL_HEIGHT = 710;
     protected static final int BOARD_X = 150;
     protected static final int BOARD_Y = 100;
     protected static final int HOLD_X = 20;

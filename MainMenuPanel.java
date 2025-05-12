@@ -4,7 +4,7 @@ import java.awt.event.*;
 
 public class MainMenuPanel extends JPanel {
     private static final int PANEL_WIDTH = 600;
-    private static final int PANEL_HEIGHT = 700;
+    private static final int PANEL_HEIGHT = 710;
 
     public MainMenuPanel(JFrame frame) {
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
@@ -19,7 +19,7 @@ public class MainMenuPanel extends JPanel {
         add(titleLabel);
 
         // Start 按鈕
-        JButton SingleplayerButton = new JButton("Arcane");
+        JButton SingleplayerButton = new JButton("Arcade");
         SingleplayerButton.setForeground(Color.WHITE);
         SingleplayerButton.setBackground(Color.LIGHT_GRAY);
         SingleplayerButton.setFont(new Font("Arial", Font.BOLD, 30));
