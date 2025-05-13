@@ -69,7 +69,7 @@ public class TetrisBattlePanel extends AbstractTetrisPanel {
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_P || e.getKeyCode() == KeyEvent.VK_L) {
+                if (e.getKeyCode() == KeyEvent.VK_O || e.getKeyCode() == KeyEvent.VK_L) {
                     togglePause();
                 }
                 if (!isPaused && !player1.isGameOver && !player2.isGameOver) {
@@ -193,7 +193,7 @@ public class TetrisBattlePanel extends AbstractTetrisPanel {
                 player1.timer.start();
                 player2.timer.start();
                 //musicThread = new Thread(this::playMusic);
-                musicThread.start();
+                //musicThread.start();
                 if (restartButton != null) {
                     remove(restartButton);
                     restartButton = null;
@@ -513,22 +513,22 @@ public class TetrisBattlePanel extends AbstractTetrisPanel {
 
         // 繪製計分
         g.setColor(Color.LIGHT_GRAY);
-        g.fillRect(PLAYER1_SCORE_X, SCORE_Y, 100, 30);
+        g.fillRect(PLAYER1_SCORE_X, SCORE_Y, 150, 30);
         g.setColor(Color.WHITE);
         g.setFont(new Font("Arial", Font.BOLD, 16));
         g.drawString("P1 Score: " + player1.score, PLAYER1_SCORE_X + 10, SCORE_Y + 20);
         g.setColor(Color.LIGHT_GRAY);
-        g.fillRect(PLAYER2_SCORE_X, SCORE_Y, 100, 30);
+        g.fillRect(PLAYER2_SCORE_X, SCORE_Y, 150, 30);
         g.setColor(Color.WHITE);
         g.drawString("P2 Score: " + player2.score, PLAYER2_SCORE_X + 10, SCORE_Y + 20);
 
         // 繪製等級
         g.setColor(Color.LIGHT_GRAY);
-        g.fillRect(PLAYER1_LEVEL_X, LEVEL_Y, 100, 30);
+        g.fillRect(PLAYER1_LEVEL_X, LEVEL_Y, 150, 30);
         g.setColor(Color.WHITE);
         g.drawString("P1 Level: " + player1.level, PLAYER1_LEVEL_X + 10, LEVEL_Y + 20);
         g.setColor(Color.LIGHT_GRAY);
-        g.fillRect(PLAYER2_LEVEL_X, LEVEL_Y, 100, 30);
+        g.fillRect(PLAYER2_LEVEL_X, LEVEL_Y, 150, 30);
         g.setColor(Color.WHITE);
         g.drawString("P2 Level: " + player2.level, PLAYER2_LEVEL_X + 10, LEVEL_Y + 20);
 
