@@ -10,13 +10,13 @@ public class ChallengeTetrisPanel extends AbstractTetrisPanel {
     private Timer obstacleTimer;
     private Random random;
 
-    public ChallengeTetrisPanel() {
-        super();
+    public ChallengeTetrisPanel(JFrame frame) {
+        super(frame);
         random = new Random();
     }
 
     @Override
-    protected void initializeGameMode() {
+    protected void initializeGameMode(JFrame frame) {
         // 初始化挑戰模式特定邏輯
         obstacleTimer = new Timer(OBSTACLE_INTERVAL_TABLE[0], e -> addObstacleLine());
         obstacleTimer.start();
@@ -77,8 +77,8 @@ public class ChallengeTetrisPanel extends AbstractTetrisPanel {
     }
 
     @Override
-    protected void togglePause() {
-        super.togglePause();
+    protected void togglePause(JFrame frame) {
+        super.togglePause(frame);
         // 同步障礙計時器
         if (isPaused) {
             obstacleTimer.stop();

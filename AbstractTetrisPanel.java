@@ -40,22 +40,55 @@ public abstract class AbstractTetrisPanel extends JPanel {
     protected JButton restartButton;
     protected JButton quitButton;
 
-    public AbstractTetrisPanel() {
+    public AbstractTetrisPanel(JFrame frame) {
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         setBackground(Color.BLACK);
         setFocusable(true);
         setLayout(null); // 使用絕對佈局以定位按鈕
 
         // 初始化遊戲模式特定邏輯
-        initializeGameMode();
+        initializeGameMode(frame);
 
         // 初始化共用遊戲狀態
         currentPiece = createNewPiece();
         nextPiece = createNewPiece();
         holdPiece = null;
         timer = new Timer(SPEED_TABLE[0], e -> {
-                moveDown();
-                repaint();
+               if(isGameOver)
+               {
+                   timer.stop();
+                   restartButton = new JButton("Restart");
+                   restartButton.setForeground(Color.WHITE);
+                   restartButton.setBackground(Color.LIGHT_GRAY);
+                   restartButton.setFont(new Font("Arial", Font.BOLD, 20));
+                   restartButton.setBounds(BOARD_X + 90, BOARD_Y + 250, 120, 50);
+                   restartButton.setFocusPainted(false);
+                   restartButton.addActionListener(eE -> restartGame());
+                   add(restartButton);
+         
+                   quitButton = new JButton("Menu");
+                   quitButton.setForeground(Color.WHITE);
+                   quitButton.setBackground(Color.LIGHT_GRAY);
+                   quitButton.setFont(new Font("Arial", Font.BOLD, 20));
+                   quitButton.setBounds(BOARD_X + 90, BOARD_Y + 350, 120, 50);
+                   quitButton.setFocusPainted(false);
+                   quitButton.addActionListener(eE -> {
+                     frame.getContentPane().removeAll();
+                     MainMenuPanel MainPanel = new MainMenuPanel(frame);
+                     frame.add(MainPanel);
+                     frame.pack();
+                     MainPanel.requestFocusInWindow();
+                     frame.revalidate();
+                     frame.repaint();
+                  });
+                   add(quitButton);
+                   repaint();
+                }
+                else
+                {
+                   moveDown();
+                   repaint();
+                }
         });
         musicThread = new Thread(new Runnable() {
             public void run() {
@@ -70,7 +103,7 @@ public abstract class AbstractTetrisPanel extends JPanel {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_P) {
-                    togglePause();
+                    togglePause(frame);
                 }
                 if (!isGameOver && !isPaused) {
                     switch (e.getKeyCode()) {
@@ -106,11 +139,11 @@ public abstract class AbstractTetrisPanel extends JPanel {
                     repaint();
                 }
             }
-        });
+        });        
     }
 
     // 抽象方法，子類必須實現模式特定初始化
-    protected abstract void initializeGameMode();
+    protected abstract void initializeGameMode(JFrame frame);
 
     // 重置遊戲狀態
     protected void restartGame() {
@@ -141,7 +174,7 @@ public abstract class AbstractTetrisPanel extends JPanel {
     }
 
     // 切換暫停狀態
-    protected void togglePause() {
+    protected void togglePause(JFrame frame) {
         if (!isGameOver) {
             isPaused = !isPaused;
             if (isPaused) {
@@ -155,13 +188,21 @@ public abstract class AbstractTetrisPanel extends JPanel {
                 restartButton.addActionListener(e -> restartGame());
                 add(restartButton);
 
-                quitButton = new JButton("Quit");
+                quitButton = new JButton("Menu");
                 quitButton.setForeground(Color.WHITE);
                 quitButton.setBackground(Color.LIGHT_GRAY);
                 quitButton.setFont(new Font("Arial", Font.BOLD, 20));
                 quitButton.setBounds(BOARD_X + 90, BOARD_Y + 350, 120, 50);
                 quitButton.setFocusPainted(false);
-                quitButton.addActionListener(e -> System.exit(0));
+                quitButton.addActionListener(e -> {
+                  frame.getContentPane().removeAll();
+                  MainMenuPanel MainPanel = new MainMenuPanel(frame);
+                  frame.add(MainPanel);
+                  frame.pack();
+                  MainPanel.requestFocusInWindow();
+                  frame.revalidate();
+                  frame.repaint();
+                });
                 add(quitButton);
             } else {
                 timer.start();
@@ -230,7 +271,7 @@ public abstract class AbstractTetrisPanel extends JPanel {
         nextPiece = createNewPiece();
         if (!canMove(currentPiece)) {
             isGameOver = true;
-            timer.stop();
+            //timer.stop();
         }
         hasHeld = false;
         repaint();
@@ -250,7 +291,7 @@ public abstract class AbstractTetrisPanel extends JPanel {
             nextPiece = createNewPiece();
             if (!canMove(currentPiece)) {
                 isGameOver = true;
-                timer.stop();
+                //timer.stop();
             }
             hasHeld = false;
             repaint();
@@ -432,7 +473,7 @@ public abstract class AbstractTetrisPanel extends JPanel {
         if (isGameOver) {
             g.setColor(Color.RED);
             g.setFont(new Font("Arial", Font.BOLD, 40));
-            g.drawString("Game Over", BOARD_X + WIDTH * BLOCK_SIZE / 4, BOARD_Y + HEIGHT * BLOCK_SIZE / 2);
+            g.drawString("Game Over", BOARD_X + WIDTH * BLOCK_SIZE / 6, BOARD_Y + HEIGHT * BLOCK_SIZE / 3);
         }
 
         // 允許子類繪製模式特定 UI

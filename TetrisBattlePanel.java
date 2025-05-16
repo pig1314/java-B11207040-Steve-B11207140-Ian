@@ -26,8 +26,8 @@ public class TetrisBattlePanel extends AbstractTetrisPanel {
     private String winner = null;
     private boolean isDeterminingWinner = false;
 
-    public TetrisBattlePanel() {
-        super();
+    public TetrisBattlePanel(JFrame frame) {
+        super(frame);
         timer.stop(); // 禁用基類計時器
         setFocusable(true);
         addFocusListener(new FocusAdapter() {
@@ -52,25 +52,62 @@ public class TetrisBattlePanel extends AbstractTetrisPanel {
         String lastAction = "";
         boolean pendingAttack = false; // 標記即將生成的障礙行
 
-        PlayerState() {
+        PlayerState(JFrame frame){
             currentPiece = createNewPiece(board);
             nextPiece = createNewPiece(board);
             holdPiece = null;
-            timer = new Timer(SPEED_TABLE[0], e -> moveDown(this));
+            timer = new Timer(SPEED_TABLE[0], e -> 
+            {
+               if(isGameOver)
+               {
+                   timer.stop();
+                   restartButton = new JButton("Restart");
+                   restartButton.setForeground(Color.WHITE);
+                   restartButton.setBackground(Color.LIGHT_GRAY);
+                   restartButton.setFont(new Font("Arial", Font.BOLD, 20));
+                   restartButton.setBounds(BOARD_X + 90, BOARD_Y + 250, 120, 50);
+                   restartButton.setFocusPainted(false);
+                   restartButton.addActionListener(e1 -> restartGame(frame));              
+                   add(restartButton);
+         
+                   quitButton = new JButton("Menu");
+                   quitButton.setForeground(Color.WHITE);
+                   quitButton.setBackground(Color.LIGHT_GRAY);
+                   quitButton.setFont(new Font("Arial", Font.BOLD, 20));
+                   quitButton.setBounds(BOARD_X + 90, BOARD_Y + 350, 120, 50);
+                   quitButton.setFocusPainted(false);
+                   quitButton.addActionListener(e1 -> {
+                     frame.getContentPane().removeAll();
+                     MainMenuPanel MainPanel = new MainMenuPanel(frame);
+                     frame.add(MainPanel);
+                     frame.pack();
+                     MainPanel.requestFocusInWindow();
+                     frame.revalidate();
+                     frame.repaint();
+                  });
+                  add(quitButton);
+                  repaint();
+                }
+                else 
+                {
+                  moveDown(this);
+                  repaint();
+                }
+            });
             timer.start();
         }
     }
 
     @Override
-    protected void initializeGameMode() {
-        player1 = new PlayerState();
-        player2 = new PlayerState();
+    protected void initializeGameMode(JFrame frame) {
+        player1 = new PlayerState(frame);
+        player2 = new PlayerState(frame);
 
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_O || e.getKeyCode() == KeyEvent.VK_L) {
-                    togglePause();
+                    togglePause(frame);
                 }
                 if (!isPaused && !player1.isGameOver && !player2.isGameOver) {
                     if (!player1.isGameOver) {
@@ -131,7 +168,7 @@ public class TetrisBattlePanel extends AbstractTetrisPanel {
                                 hold(player2);
                                 player2.lastAction = "hold";
                                 break;
-                            case KeyEvent.VK_NUMPAD0:
+                            case KeyEvent.VK_I:
                                 hardDrop(player2);
                                 player2.lastAction = "hardDrop";
                                 break;
@@ -143,10 +180,9 @@ public class TetrisBattlePanel extends AbstractTetrisPanel {
         });
     }
 
-    @Override
-    protected void restartGame() {
-        player1 = new PlayerState();
-        player2 = new PlayerState();
+    protected void restartGame(JFrame frame) {
+        player1 = new PlayerState(frame);
+        player2 = new PlayerState(frame); 
         isPaused = false;
         winner = null;
         isDeterminingWinner = false;
@@ -164,7 +200,7 @@ public class TetrisBattlePanel extends AbstractTetrisPanel {
     }
 
     @Override
-    protected void togglePause() {
+    protected void togglePause(JFrame frame) {
         if (!player1.isGameOver && !player2.isGameOver) {
             isPaused = !isPaused;
             isPlayingMusic = !isPaused;
@@ -178,16 +214,24 @@ public class TetrisBattlePanel extends AbstractTetrisPanel {
                 restartButton.setFont(new Font("Arial", Font.BOLD, 20));
                 restartButton.setBounds(240, 400, 120, 50);
                 restartButton.setFocusPainted(false);
-                restartButton.addActionListener(e -> restartGame());
+                restartButton.addActionListener(e -> restartGame(frame));
                 add(restartButton);
 
-                quitButton = new JButton("Quit");
+                quitButton = new JButton("Menu");
                 quitButton.setForeground(Color.WHITE);
                 quitButton.setBackground(Color.LIGHT_GRAY);
                 quitButton.setFont(new Font("Arial", Font.BOLD, 20));
                 quitButton.setBounds(240, 500, 120, 50);
                 quitButton.setFocusPainted(false);
-                quitButton.addActionListener(e -> System.exit(0));
+                quitButton.addActionListener(e -> {
+                  frame.getContentPane().removeAll();
+                  MainMenuPanel MainPanel = new MainMenuPanel(frame);
+                  frame.add(MainPanel);
+                  frame.pack();
+                  MainPanel.requestFocusInWindow();
+                  frame.revalidate();
+                  frame.repaint();
+                });
                 add(quitButton);
             } else {
                 player1.timer.start();
@@ -220,7 +264,7 @@ public class TetrisBattlePanel extends AbstractTetrisPanel {
             player.nextPiece = createNewPiece(player.board);
             if (!canMove(player)) {
                 player.isGameOver = true;
-                player.timer.stop();
+                //player.timer.stop();
                 determineWinner();
             }
             player.hasHeld = false;
@@ -334,7 +378,7 @@ public class TetrisBattlePanel extends AbstractTetrisPanel {
             for (int j = 0; j < WIDTH; j++) {
                 if (opponent.board[0][j] != 0) {
                     opponent.isGameOver = true;
-                    opponent.timer.stop();
+                    //opponent.timer.stop();
                     determineWinner();
                     return;
                 }
@@ -369,7 +413,7 @@ public class TetrisBattlePanel extends AbstractTetrisPanel {
                     opponent.currentPiece.position.y -= offset;
                 } else {
                     opponent.isGameOver = true;
-                    opponent.timer.stop();
+                    //opponent.timer.stop();
                     determineWinner();
                     return;
                 }
@@ -413,7 +457,7 @@ public class TetrisBattlePanel extends AbstractTetrisPanel {
         player.nextPiece = createNewPiece(player.board);
         if (!canMove(player)) {
             player.isGameOver = true;
-            player.timer.stop();
+            //player.timer.stop();
             determineWinner();
         }
         player.hasHeld = false;
@@ -605,7 +649,7 @@ public class TetrisBattlePanel extends AbstractTetrisPanel {
         if (winner != null) {
             g.setColor(Color.RED);
             g.setFont(new Font("Arial", Font.BOLD, 40));
-            g.drawString(winner, PANEL_WIDTH / 3, BOARD_Y + 250);
+            g.drawString(winner, PANEL_WIDTH / 3, BOARD_Y + 150);
         }
         // 繪製攻擊提示
         if (player1.pendingAttack) {
