@@ -1,12 +1,25 @@
 import javax.swing.*;
+import javazoom.jl.player.Player;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.util.Random;
 
 public class MainMenuPanel extends JPanel {
     private static final int PANEL_WIDTH = 600;
     private static final int PANEL_HEIGHT = 710;
+    protected Thread musicThread;
+    protected boolean isPlayingMusic = true;
 
     public MainMenuPanel(JFrame frame) {
+        /*musicThread = new Thread(new Runnable() {
+            public void run() {
+                playMusic();
+            }
+        });
+        musicThread.start();*/
+    
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         setBackground(Color.BLACK);
         setLayout(null); // 使用絕對佈局以精確定位
@@ -86,5 +99,18 @@ public class MainMenuPanel extends JPanel {
         // 可選：添加背景效果（例如，漸層或簡單矩形）
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, PANEL_WIDTH, PANEL_HEIGHT);
+    }
+    
+    private void playMusic() {
+        try {
+            while (isPlayingMusic) {
+                FileInputStream fis = new FileInputStream("tetris.mp3");
+                BufferedInputStream bis = new BufferedInputStream(fis);
+                Player player = new Player(bis);
+                player.play();
+            }
+        } catch (Exception e) {
+            System.out.println("Problem playing sound file: " + e.getMessage());
+        }
     }
 }

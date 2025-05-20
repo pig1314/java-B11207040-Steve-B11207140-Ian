@@ -90,12 +90,12 @@ public abstract class AbstractTetrisPanel extends JPanel {
                    repaint();
                 }
         });
-        musicThread = new Thread(new Runnable() {
+        /*musicThread = new Thread(new Runnable() {
             public void run() {
                 playMusic();
             }
         });
-        musicThread.start();
+        musicThread.start();*/
         timer.start();
 
         // 設置按鍵監聽器

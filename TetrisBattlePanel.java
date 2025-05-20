@@ -106,7 +106,7 @@ public class TetrisBattlePanel extends AbstractTetrisPanel {
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_O || e.getKeyCode() == KeyEvent.VK_L) {
+                if (e.getKeyCode() == KeyEvent.VK_O) {
                     togglePause(frame);
                 }
                 if (!isPaused && !player1.isGameOver && !player2.isGameOver) {
@@ -160,15 +160,15 @@ public class TetrisBattlePanel extends AbstractTetrisPanel {
                                 player2.currentPiece.rotateCW();
                                 player2.lastAction = "rotate";
                                 break;
-                            case KeyEvent.VK_NUMPAD1:
+                            case KeyEvent.VK_K:
                                 player2.currentPiece.rotateCCW();
                                 player2.lastAction = "rotateBack";
                                 break;
-                            case KeyEvent.VK_NUMPAD2:
+                            case KeyEvent.VK_L:
                                 hold(player2);
                                 player2.lastAction = "hold";
                                 break;
-                            case KeyEvent.VK_I:
+                            case KeyEvent.VK_M:
                                 hardDrop(player2);
                                 player2.lastAction = "hardDrop";
                                 break;
@@ -207,7 +207,7 @@ public class TetrisBattlePanel extends AbstractTetrisPanel {
             if (isPaused) {
                 player1.timer.stop();
                 player2.timer.stop();
-                musicThread.interrupt();
+                //musicThread.interrupt();
                 restartButton = new JButton("Restart");
                 restartButton.setForeground(Color.WHITE);
                 restartButton.setBackground(Color.LIGHT_GRAY);
