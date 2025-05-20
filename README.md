@@ -151,19 +151,27 @@
 
 ## UML 類別圖 (Class Diagram)
 
-![]()
+![Tetris class diagram](https://github.com/pig1314/java-B11207040-Steve-B11207140-Ian/blob/main/Images/Tetris%20class%20diagram.png)
 
 ---
 
 ## 流程圖 (Flow Chart)
-
-![]()
+### • Arcade Mode
+![Tetris Arcade mode flow chart](https://github.com/pig1314/java-B11207040-Steve-B11207140-Ian/blob/main/Images/Tetris%20Arcademode%20flow%20chart.png)
+### • Challenge Mode
+![Tetris challenge mode flow chart](https://github.com/pig1314/java-B11207040-Steve-B11207140-Ian/blob/main/Images/Tetris%20challenge%20mode%20flow%20chart.png)
+### • Battle Mode
+![Tetris battle mode flow chart](https://github.com/pig1314/java-B11207040-Steve-B11207140-Ian/blob/main/Images/Tetris%20battle%20mode%20flow%20chart.png)
 
 ---
 
 ## 序列圖 (Sequence Diagram)
-
-![]()
+### • Arcade Mode
+![Tetris Arcade mode sequential diagram](https://github.com/pig1314/java-B11207040-Steve-B11207140-Ian/blob/main/Images/Tetris%20Arcade%20mode%20sequential%20diagram.png)
+### • Challenge Mode
+![Tetris challenge mode sequential diagrma](https://github.com/pig1314/java-B11207040-Steve-B11207140-Ian/blob/main/Images/Tetris%20challenge%20mode%20sequential%20diagrma.png)
+### • Battle Mode
+![Tetris battle mode sequential diagram](https://github.com/pig1314/java-B11207040-Steve-B11207140-Ian/blob/main/Images/Tetris%20battle%20mode%20sequential%20diagram.png)
 
 ---
 
