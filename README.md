@@ -67,7 +67,7 @@
 ---
 ## 下載與執行
 ### 系統需求
-•  **作業系統**：Windows (Windows 8 or Higher) / macOS ARM 64 or X64 (Mavericks 10.9 or Higher) / Linux / UNIX
+•  **作業系統**：Windows / macOS / Linux
 
 •  **JAVA**：JDK23 以上
 1. 下載 Tetris.jar
