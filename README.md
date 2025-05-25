@@ -80,7 +80,6 @@
    **for zip file**
    ```bash
    tar -xf Tetris.zip
-   cd Tetris
    java -jar Tetris.jar
    ```
    *zip file is recommanded due to the audio issue of jar file
