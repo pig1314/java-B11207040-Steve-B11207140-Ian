@@ -14,13 +14,14 @@ s#k0
 s#j0
 s#l0
 !94;u
-a0	b70	c255	f%\011Tetris.jar	g%\011Tetris.zip	hManifest-Version\0111.0\011Main-Class\011Tetris!344;g
+a0	b70	c255	f%\011Tetris.jar	g%\011Tetris.zip	hManifest-Version\0111.0\011Main-Class\011Tetris!360;g
 %\011AbstractTetrisPanel.java
 %\011ArcadeTetrisPanel.java
 %\011ChallengeTetrisPanel.java
 %\011JLayer1.0.1%s
 %\011MainMenuPanel.java
 %\011Tetris.java
+%\011tetris.mp3
 %\011TetrisBattlePanel.java
 %\011Tetromino.java
 %\011TetrominoI.java
@@ -30,13 +31,14 @@ a0	b70	c255	f%\011Tetris.jar	g%\011Tetris.zip	hManifest-Version\0111.0\011Main-C
 %\011TetrominoS.java
 %\011TetrominoT.java
 %\011TetrominoZ.java
-!344;f
+!360;f
 %\011AbstractTetrisPanel.java
 %\011ArcadeTetrisPanel.java
 %\011ChallengeTetrisPanel.java
 %\011JLayer1.0.1%s
 %\011MainMenuPanel.java
 %\011Tetris.java
+%\011tetris.mp3
 %\011TetrisBattlePanel.java
 %\011Tetromino.java
 %\011TetrominoI.java
