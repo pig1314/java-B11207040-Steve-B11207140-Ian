@@ -72,10 +72,18 @@
 •  **JAVA**：JDK23 以上
 1. 下載 Tetris.jar
 2. 開啟終端機執行：
-   
+
+   **for jar file**
    ```bash
    java -jar Tetris.jar
    ```
+   **for zip file**
+   ```bash
+   tar -xf Tetris.zip
+   cd Tetris
+   java -jar Tetris.jar
+   ```
+   *zip file is recommanded due to the audio issue of jar file
    
 ## 功能列表
 ### 1. 畫面呈現
