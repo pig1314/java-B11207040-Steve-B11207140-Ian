@@ -13,8 +13,8 @@ s#i0
 s#k0
 s#j0
 s#l0
-!94;u
-a0	b70	c255	f%\011Tetris.jar	g%\011Tetris.zip	hManifest-Version\0111.0\011Main-Class\011Tetris!360;g
+!120;u
+a1	b70	c255	e%\\011Tetris.jar	f%\011Tetris.jar	g%\011Tetris.zip	hManifest-Version\0111.0\011Main-Class\011Tetris	iTetris!360;g
 %\011AbstractTetrisPanel.java
 %\011ArcadeTetrisPanel.java
 %\011ChallengeTetrisPanel.java
